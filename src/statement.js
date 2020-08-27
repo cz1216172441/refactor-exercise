@@ -1,3 +1,8 @@
+const playTypes = {
+  TRAGEDY: 'tragedy',
+  COMEDY: 'comedy'
+};
+
 function currencyFormat() {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -6,16 +11,16 @@ function currencyFormat() {
   }).format;
 }
 
-function calAmount(play, perf) {
+function calAmount(playType, perf) {
   let thisAmount = 0;
-  switch (play.type) {
-    case 'tragedy':
+  switch (playType) {
+    case playTypes.TRAGEDY:
       thisAmount = 40000;
       if (perf.audience > 30) {
         thisAmount += 1000 * (perf.audience - 30);
       }
       return thisAmount;
-    case 'comedy':
+    case playTypes.COMEDY:
       thisAmount = 30000;
       if (perf.audience > 20) {
         thisAmount += 10000 + 500 * (perf.audience - 20);
@@ -23,7 +28,7 @@ function calAmount(play, perf) {
       thisAmount += 300 * perf.audience;
       return thisAmount;
     default:
-      throw new Error(`unknown type: ${play.type}`);
+      throw new Error(`unknown type: ${playType}`);
   }
 }
 
@@ -37,11 +42,11 @@ function statement (invoice, plays) {
 
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
-    const thisAmount = calAmount(play, perf);
+    const thisAmount = calAmount(play.type, perf);
     // add volume credits
     volumeCredits += Math.max(perf.audience - 30, 0);
     // add extra credit for every ten comedy attendees
-    if ('comedy' === play.type) volumeCredits += Math.floor(perf.audience / 5);
+    if (playTypes.COMEDY === play.type) volumeCredits += Math.floor(perf.audience / 5);
     //print line for this order
     result += ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
     totalAmount += thisAmount;
