@@ -60,19 +60,23 @@ function createStatementData(invoice, plays) {
   return statementData;
 }
 
-function generateText(customer, statementData) {
-  let result = `Statement for ${customer}\n`;
-  statementData.performances.forEach(item => {
-    result += ` ${item.name}: ${currencyFormat(item.amount)} (${item.audience} seats)\n`;
-  })
-  result += `Amount owed is ${currencyFormat(statementData.totalAmount)}\n`;
-  result += `You earned ${statementData.volumeCredits} credits \n`;
+function generateHtml(customer, statementData) {
+  let result = `<h1>Statement for ${customer}</h1>\n`;
+  if (statementData.performances.length > 0) {
+    result += `<table>\n<tr><th>play</th><th>seats</th><th>cost</th></tr>`;
+    statementData.performances.forEach(item => {
+      result += ` <tr><td>${item.name}</td><td>${item.audience}</td><td>${currencyFormat(item.amount)}</td></tr>\n`;
+    })
+    result += `</table>\n`
+  }
+  result += `<p>Amount owed is <em>${currencyFormat(statementData.totalAmount)}</em></p>\n`;
+  result += `<p>You earned <em>${statementData.volumeCredits}</em> credits</p>\n`;
   return result;
 }
 
 function statement (invoice, plays) {
   const statementData = createStatementData(invoice, plays);
-  return generateText(invoice.customer, statementData);
+  return generateHtml(invoice.customer, statementData);
 }
 
 module.exports = {

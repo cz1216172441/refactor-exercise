@@ -27,9 +27,9 @@ test('should_return_amount_0_and_credits_0_when_statement_given_0_performance', 
     const actualResult = statement(invoice, plays);
 
     // then
-    t.is(actualResult, `Statement for BigCo\n` +
-        `Amount owed is $0.00\n` +
-        `You earned 0 credits \n`);
+    t.is(actualResult, '<h1>Statement for BigCo</h1>\n' +
+        '<p>Amount owed is <em>$0.00</em></p>\n' +
+        '<p>You earned <em>0</em> credits</p>\n');
 });
 
 test('should_return_amount_400_and_credits_0_when_statement_given_1_performance_with_type_tragedy_and_audience_30', t => {
@@ -46,10 +46,13 @@ test('should_return_amount_400_and_credits_0_when_statement_given_1_performance_
     const actualResult = statement(invoice, plays);
 
     // then
-    t.is(actualResult, `Statement for BigCo\n` +
-        ` Hamlet: $400.00 (30 seats)\n` +
-        `Amount owed is $400.00\n` +
-        `You earned 0 credits \n`);
+    t.is(actualResult, `<h1>Statement for BigCo</h1>\n` +
+        `<table>\n` +
+        `<tr><th>play</th><th>seats</th><th>cost</th></tr>` +
+        ` <tr><td>Hamlet</td><td>30</td><td>$400.00</td></tr>\n` +
+        '</table>\n' +
+        `<p>Amount owed is <em>$400.00</em></p>\n` +
+        `<p>You earned <em>0</em> credits</p>\n`);
 });
 
 test('should_return_amount_410_and_credits_1_when_statement_given_1_performance_with_type_tragedy_and_audience_31', t => {
@@ -66,10 +69,13 @@ test('should_return_amount_410_and_credits_1_when_statement_given_1_performance_
     const actualResult = statement(invoice, plays);
 
     // then
-    t.is(actualResult, `Statement for BigCo\n` +
-        ` Hamlet: $410.00 (31 seats)\n` +
-        `Amount owed is $410.00\n` +
-        `You earned 1 credits \n`);
+    t.is(actualResult, `<h1>Statement for BigCo</h1>\n` +
+        `<table>\n` +
+        `<tr><th>play</th><th>seats</th><th>cost</th></tr>` +
+        ` <tr><td>Hamlet</td><td>31</td><td>$410.00</td></tr>\n` +
+        '</table>\n' +
+        `<p>Amount owed is <em>$410.00</em></p>\n` +
+        `<p>You earned <em>1</em> credits</p>\n`);
 });
 
 test('should_return_amount_360_and_credits_4_when_statement_given_1_performance_with_type_comedy_and_audience_20', t => {
@@ -86,10 +92,13 @@ test('should_return_amount_360_and_credits_4_when_statement_given_1_performance_
     const actualResult = statement(invoice, plays);
 
     // then
-    t.is(actualResult, `Statement for BigCo\n` +
-        ` As You Like It: $360.00 (20 seats)\n` +
-        `Amount owed is $360.00\n` +
-        `You earned 4 credits \n`);
+    t.is(actualResult, `<h1>Statement for BigCo</h1>\n` +
+        `<table>\n` +
+        `<tr><th>play</th><th>seats</th><th>cost</th></tr>` +
+        ` <tr><td>As You Like It</td><td>20</td><td>$360.00</td></tr>\n` +
+        '</table>\n' +
+        `<p>Amount owed is <em>$360.00</em></p>\n` +
+        `<p>You earned <em>4</em> credits</p>\n`);
 });
 
 test('should_return_amount_468_and_credits_4_when_statement_given_1_performance_with_type_comedy_and_audience_21', t => {
@@ -106,10 +115,13 @@ test('should_return_amount_468_and_credits_4_when_statement_given_1_performance_
     const actualResult = statement(invoice, plays);
 
     // then
-    t.is(actualResult, `Statement for BigCo\n` +
-        ` As You Like It: $468.00 (21 seats)\n` +
-        `Amount owed is $468.00\n` +
-        `You earned 4 credits \n`);
+    t.is(actualResult, `<h1>Statement for BigCo</h1>\n` +
+        `<table>\n` +
+        `<tr><th>play</th><th>seats</th><th>cost</th></tr>` +
+        ` <tr><td>As You Like It</td><td>21</td><td>$468.00</td></tr>\n` +
+        '</table>\n' +
+        `<p>Amount owed is <em>$468.00</em></p>\n` +
+        `<p>You earned <em>4</em> credits</p>\n`);
 });
 
 test('should_return_amount_1730_and_credits_47_when_statement_given_3_performances', t => {
@@ -136,12 +148,15 @@ test('should_return_amount_1730_and_credits_47_when_statement_given_3_performanc
     const actualResult = statement(invoice, plays);
 
     // then
-    t.is(actualResult, `Statement for BigCo\n` +
-        ` Hamlet: $650.00 (55 seats)\n` +
-        ` As You Like It: $580.00 (35 seats)\n` +
-        ` Othello: $500.00 (40 seats)\n` +
-        `Amount owed is $1,730.00\n` +
-        `You earned 47 credits \n`);
+    t.is(actualResult, `<h1>Statement for BigCo</h1>\n` +
+        `<table>\n` +
+        `<tr><th>play</th><th>seats</th><th>cost</th></tr>` +
+        ` <tr><td>Hamlet</td><td>55</td><td>$650.00</td></tr>\n` +
+        ` <tr><td>As You Like It</td><td>35</td><td>$580.00</td></tr>\n` +
+        ` <tr><td>Othello</td><td>40</td><td>$500.00</td></tr>\n` +
+        '</table>\n' +
+        `<p>Amount owed is <em>$1,730.00</em></p>\n` +
+        `<p>You earned <em>47</em> credits</p>\n`);
 });
 
 test('should_return_unknown_type_when_statement_given_1_play_with_unknown_type', t => {
