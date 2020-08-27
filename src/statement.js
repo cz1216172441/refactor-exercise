@@ -60,18 +60,19 @@ function createStatementData(invoice, plays) {
   return statementData;
 }
 
-function statement (invoice, plays) {
-  let result = `Statement for ${invoice.customer}\n`;
-
-  const statementData = createStatementData(invoice, plays);
-
+function generateText(customer, statementData) {
+  let result = `Statement for ${customer}\n`;
   statementData.performances.forEach(item => {
     result += ` ${item.name}: ${currencyFormat(item.amount)} (${item.audience} seats)\n`;
   })
-
   result += `Amount owed is ${currencyFormat(statementData.totalAmount)}\n`;
   result += `You earned ${statementData.volumeCredits} credits \n`;
   return result;
+}
+
+function statement (invoice, plays) {
+  const statementData = createStatementData(invoice, plays);
+  return generateText(invoice.customer, statementData);
 }
 
 module.exports = {
