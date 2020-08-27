@@ -41,33 +41,36 @@ function addVolumeCredits(volumeCredits, audience, playType) {
 }
 
 function createStatementData(invoice, plays) {
-  return invoice.performances.map(performance => {
+  let statementData = {
+    totalAmount: 0,
+    volumeCredits: 0
+  };
+  statementData.performances = invoice.performances.map(performance => {
     const play = plays[performance.playID];
     const amount = calAmount(play.type, performance);
+    statementData.volumeCredits = addVolumeCredits(statementData.volumeCredits, performance.audience, play.type);
+    statementData.totalAmount += amount;
     return {
       name: play.name,
       type: play.type,
       amount: amount,
       audience: performance.audience
     }
-  })
+  });
+  return statementData;
 }
 
 function statement (invoice, plays) {
-  let totalAmount = 0;
-  let volumeCredits = 0;
-
   let result = `Statement for ${invoice.customer}\n`;
+
   const statementData = createStatementData(invoice, plays);
 
-  statementData.forEach(item => {
-    volumeCredits = addVolumeCredits(volumeCredits, item.audience, item.type);
+  statementData.performances.forEach(item => {
     result += ` ${item.name}: ${currencyFormat(item.amount)} (${item.audience} seats)\n`;
-    totalAmount += item.amount;
   })
 
-  result += `Amount owed is ${currencyFormat(totalAmount)}\n`;
-  result += `You earned ${volumeCredits} credits \n`;
+  result += `Amount owed is ${currencyFormat(statementData.totalAmount)}\n`;
+  result += `You earned ${statementData.volumeCredits} credits \n`;
   return result;
 }
 
