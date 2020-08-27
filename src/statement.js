@@ -3,12 +3,12 @@ const playTypes = {
   COMEDY: 'comedy'
 };
 
-function currencyFormat() {
+function currencyFormat(amount) {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 2,
-  }).format;
+  }).format(amount / 100);
 }
 
 function calAmount(playType, perf) {
@@ -40,23 +40,33 @@ function addVolumeCredits(volumeCredits, audience, playType) {
   return resultCredits;
 }
 
+function createStatementData(invoice, plays) {
+  return invoice.performances.map(performance => {
+    const play = plays[performance.playID];
+    const amount = calAmount(play.type, performance);
+    return {
+      name: play.name,
+      type: play.type,
+      amount: amount,
+      audience: performance.audience
+    }
+  })
+}
+
 function statement (invoice, plays) {
   let totalAmount = 0;
   let volumeCredits = 0;
 
   let result = `Statement for ${invoice.customer}\n`;
+  const statementData = createStatementData(invoice, plays);
 
-  const format = currencyFormat();
+  statementData.forEach(item => {
+    volumeCredits = addVolumeCredits(volumeCredits, item.audience, item.type);
+    result += ` ${item.name}: ${currencyFormat(item.amount)} (${item.audience} seats)\n`;
+    totalAmount += item.amount;
+  })
 
-  for (let perf of invoice.performances) {
-    const play = plays[perf.playID];
-    const thisAmount = calAmount(play.type, perf);
-    volumeCredits = addVolumeCredits(volumeCredits, perf.audience, play.type);
-    //print line for this order
-    result += ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
-    totalAmount += thisAmount;
-  }
-  result += `Amount owed is ${format(totalAmount / 100)}\n`;
+  result += `Amount owed is ${currencyFormat(totalAmount)}\n`;
   result += `You earned ${volumeCredits} credits \n`;
   return result;
 }
